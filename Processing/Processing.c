@@ -137,7 +137,7 @@ void supprimerEspece(Graphe* graphe, int id) {
     }
 
     // Marquer l'espèce comme supprimée (par exemple, en mettant sa quantité à -1)
-    graphe->pSommet[id]->quantité = -1;
+    graphe->pSommet[id]->quantity = -1;
 
     printf("Espèce %d supprimée.\n", id);
 }
@@ -147,7 +147,7 @@ void supprimerEspece(Graphe* graphe, int id) {
 
 void repercuterSuppression(Graphe* graphe, int id) {
     // Vérification de l'id
-    if (id < 0 || id >= graphe->ordre || graphe->pSommet[id]->quantité == -1) {
+    if (id < 0 || id >= graphe->ordre || graphe->pSommet[id]->quantity == -1) {
         printf("Erreur : espèce invalide ou déjà supprimée.\n");
         return;
     }
@@ -189,14 +189,14 @@ void repercuterSuppression(Graphe* graphe, int id) {
 void afficherGraphe(Graphe* graphe) {
     printf("Graphe actuel :\n");
     for (int i = 0; i < graphe->ordre; i++) {
-        if (graphe->pSommet[i]->quantité == -1) {
+        if (graphe->pSommet[i]->quantity == -1) {
             printf("Espèce %d : SUPPRIMÉE\n", i);
             continue;
         }
 
         printf("Espèce %d (Quantité : %.2f, Croissance : %.2f) : ",
                graphe->pSommet[i]->id,
-               graphe->pSommet[i]->quantité,
+               graphe->pSommet[i]->quantity,
                graphe->pSommet[i]->croissance);
 
         pArc arc = graphe->pSommet[i]->arc;
