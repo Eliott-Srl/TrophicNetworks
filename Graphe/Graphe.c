@@ -51,7 +51,7 @@ Le fichier contient : ordre, taille,orientation (0 ou 1)et liste des arcs */
 Graphe *lire_graphe(char * nomFichier) {
     Graphe* graphe;
     FILE * ifs = fopen(nomFichier, "r");
-    int taille, ordre, s1, s2, pond, orientation;
+    int taille, ordre, s1, s2, pond;
 
     if (!ifs) {
         printf("Erreur de lecture fichier\n");
@@ -65,13 +65,9 @@ Graphe *lire_graphe(char * nomFichier) {
     // Créer les sommets du graphe
     for (int i = 0; i < ordre; i++) {
         graphe->pSommet[i] = (pSommet) malloc(sizeof(struct Sommet));
-        fscanf(ifs, "%d", &graphe->pSommet[i]->valeur);
+        fscanf(ifs, "%d", &graphe->pSommet[i]->id);
         graphe->pSommet[i]->arc = NULL;
     }
-
-    fscanf(ifs, "%d", &orientation);
-
-    graphe->orientation = orientation;
 
     fscanf(ifs,"%d", &taille);
 
@@ -104,12 +100,6 @@ void afficher_successeurs(pSommet * sommet, int num) {
 void graphe_afficher(Graphe* graphe) {
     printf("graphe\n");
 
-    if(graphe->orientation) {
-        printf("oriente\n");
-    } else {
-        printf("non oriente\n");
-    }
-
     printf("ordre = %d\n",graphe->ordre);
 
     printf("listes d'adjacence :\n");
@@ -118,12 +108,4 @@ void graphe_afficher(Graphe* graphe) {
         afficher_successeurs(graphe->pSommet, i);
         printf("\n");
     }
-}
-
-char couleur(Graphe *graphe, int sommet) {
-    return graphe->pSommet[sommet]->couleur;
-}
-
-void setCouleur(Graphe *graphe, int sommet, char couleur) {
-    graphe->pSommet[sommet]->couleur = couleur;
 }
