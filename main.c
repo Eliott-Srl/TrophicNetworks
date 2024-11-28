@@ -42,7 +42,7 @@ int main() {
                         playSpeed = lastSpeed;
                         lastSpeed = 0.0f;
                         timeRunning = 1;
-                        end = clock();
+                        begin = clock();
                     } else {
                         lastSpeed = playSpeed;
                         playSpeed = 0.0f;
