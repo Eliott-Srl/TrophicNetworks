@@ -10,28 +10,30 @@
 struct Arc {
     int sommet; // numéro de sommet d'un arc adjacent au sommet initial
     float poids; // Pondération
-    struct Arc* arc_suivant;
+    struct Arc *arc_suivant;
 };
 
 /* Alias de pointeur sur un Arc */
-typedef struct Arc* pArc;
+typedef struct Arc *pArc;
 
 /* Structure d'un sommet*/
 struct Sommet {
-    struct Arc* arc;
-    float quantité;
+    struct Arc *arc;
+    float quantity;
     float croissance;
+    int portageEnvironnement;
     int id;
 };
 
 /* Alias de pointeur sur un Sommet */
-typedef struct Sommet* pSommet;
+typedef struct Sommet *pSommet;
 
 /* Alias d'un Graphe */
 typedef struct Graphe {
     int taille;
     int ordre;
-    pSommet* pSommet;
+    char *names; // Tableau des noms des sommets, l'index du nom correspond à l'id du sommet
+    pSommet *pSommet;
 } Graphe;
 
 // créer le graphe
