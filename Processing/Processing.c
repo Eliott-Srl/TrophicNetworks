@@ -25,74 +25,95 @@ bool primaryProductor(Graphe* graphe, int id) {
 }
 
 
-int calculerNiveauTrophique(Graphe* graphe, int id, int* niveaux) {
-    // Si le niveau a déjà été calculé, on le retourne
-    if (niveaux[id] != -1) {
-        return niveaux[id];
+// Ajouter un niveau trophique à la liste s'il n'existe pas déjà
+void ajouterNiveau(int* niveaux, int* taille, int niveau) {
+    for (int i = 0; i < *taille; i++) {
+        if (niveaux[i] == niveau) {
+            return; // Niveau déjà présent, on ne l'ajoute pas
+        }
+    }
+    niveaux[*taille] = niveau;
+    (*taille)++;
+}
+
+// Fonction récursive pour calculer tous les niveaux trophiques possibles
+void calculerNiveauTrophique(Graphe* graphe, int id, int** niveaux, int* tailles) {
+    // Si le niveau a déjà été calculé pour cette espèce, on ne recalculera pas
+    if (tailles[id] != -1) {
+        return;
     }
 
-    // Si l'espèce est un producteur primaire, son niveau est 0 (on vérifie avec al fonction d'avant)
+    // Si l'espèce est un producteur primaire, son niveau est 0
     if (primaryProductor(graphe, id)) {
-        niveaux[id] = 0;
-        return 0;
+        niveaux[id][0] = 0;
+        tailles[id] = 1;
+        return;
     }
 
-    // Sinon, calculer le niveau trophique basé sur le prédécesseur
-    int maxNiveau = 0;
+    // Calculer les niveaux trophiques basés sur les prédécesseurs
+    tailles[id] = 0; // Initialiser la taille de la liste des niveaux trophiques
     for (int i = 0; i < graphe->ordre; i++) {
-
+        // Parcourir les arcs pour trouver les prédécesseurs de l'espèce `id`
         pArc arc = graphe->pSommet[i]->arc;
         while (arc != NULL) {
             if (arc->sommet == id) {
-                int niveauPrecedent = calculerNiveauTrophique(graphe, i, niveaux);
-                if (niveauPrecedent + 1 > maxNiveau) {
-                    maxNiveau = niveauPrecedent + 1;
+                // Calculer les niveaux trophiques pour le prédécesseur
+                calculerNiveauTrophique(graphe, i, niveaux, tailles);
+
+                // Ajouter tous les niveaux trophiques du prédécesseur + 1
+                for (int j = 0; j < tailles[i]; j++) {
+                    ajouterNiveau(niveaux[id], &tailles[id], niveaux[i][j] + 1);
                 }
             }
             arc = arc->arc_suivant;
         }
     }
-
-    // Stocker et retourner le niveau trophique
-    niveaux[id] = maxNiveau;
-    return maxNiveau;
 }
 
 void trophicLevels(Graphe* graphe, int id) {
-    // Vérification que le graphe est valide
+    // Vérification du graphe
     if (graphe == NULL || graphe->pSommet == NULL) {
-        printf("marche pas.\n");
+        printf("Erreur : graphe invalide.\n");
         return;
     }
 
-    // Tableau pour mémoriser les niveaux trophiques
-    int* niveaux = malloc(graphe->ordre * sizeof(int));
-    if (niveaux == NULL) {
-        printf("pas assez de mémoire.\n");
-        return;
-    }
+    // Initialiser les tableaux pour stocker les niveaux trophiques
+    int** niveaux = malloc(graphe->ordre * sizeof(int*));
+    int* tailles = malloc(graphe->ordre * sizeof(int));
 
-    // Initialiser les niveaux non calculés à -1
     for (int i = 0; i < graphe->ordre; i++) {
-        niveaux[i] = -1;
+        niveaux[i] = malloc(graphe->ordre * sizeof(int)); // Chaque espèce peut avoir jusqu'à "ordre" niveaux
+        tailles[i] = -1; // Initialiser la taille à -1 (non calculé)
     }
 
-    // Si un id spé est donné
+    // Si un id spécifique est donné
     if (id >= 0 && id < graphe->ordre) {
         printf("Calcul des niveaux trophiques pour l'espèce %d :\n", id);
-        int niveau = calculerNiveauTrophique(graphe, id, niveaux);
-        printf("Espèce %d : Niveau trophique %d\n", id, niveau);
+        calculerNiveauTrophique(graphe, id, niveaux, tailles);
+        printf("Espèce %d : Niveaux trophiques possibles : ", id);
+        for (int i = 0; i < tailles[id]; i++) {
+            printf("%d ", niveaux[id][i]);
+        }
+        printf("\n");
     } else {
-        // Si aucun id spécifique n'est donné, on affiche tout
+        // Calculer pour toutes les espèces
         printf("Niveaux trophiques pour toutes les espèces :\n");
         for (int i = 0; i < graphe->ordre; i++) {
-            int niveau = calculerNiveauTrophique(graphe, i, niveaux);
-            printf("Espèce %d : Niveau trophique %d\n", i, niveau);
+            calculerNiveauTrophique(graphe, i, niveaux, tailles);
+            printf("Espèce %d : Niveaux trophiques possibles : ", i);
+            for (int j = 0; j < tailles[i]; j++) {
+                printf("%d ", niveaux[i][j]);
+            }
+            printf("\n");
         }
     }
 
     // Libérer la mémoire
+    for (int i = 0; i < graphe->ordre; i++) {
+        free(niveaux[i]);
+    }
     free(niveaux);
+    free(tailles);
 }
 
 
