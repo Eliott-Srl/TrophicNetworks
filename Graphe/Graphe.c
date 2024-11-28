@@ -1,39 +1,34 @@
 #include "Graphe.h"
 
-pSommet* CreerArete(pSommet* sommet, int s1, int s2, int pond) {
-    if(sommet[s1]->arc==NULL) {
-        pArc Newarc = (pArc)malloc(sizeof(struct Arc));
+pSommet* CreerArete(pSommet* sommet, int s1, int s2, float pond) {
+    if (sommet[s1]->arc == NULL) {
+        pArc Newarc = (pArc) malloc(sizeof(struct Arc));
         Newarc->sommet = s2;
         Newarc->poids = pond;
-        Newarc->arc_suivant=NULL;
+        Newarc->arc_suivant = NULL;
         sommet[s1]->arc = Newarc;
         return sommet;
-    }
-
-    else
-    {
-        pArc temp=sommet[s1]->arc;
-        while( !(temp->arc_suivant == NULL))
-        {
-            temp=temp->arc_suivant;
+    } else {
+        pArc temp = sommet[s1]->arc;
+        while (temp->arc_suivant != NULL) {
+            temp = temp->arc_suivant;
         }
-        pArc Newarc=(pArc)malloc(sizeof(struct Arc));
-        Newarc->sommet=s2;
+        pArc Newarc = (pArc) malloc(sizeof(struct Arc));
+        Newarc->sommet = s2;
         Newarc->poids = pond;
-        Newarc->arc_suivant=NULL;
+        Newarc->arc_suivant = NULL;
 
-        if(temp->sommet>s2)
-        {
-            Newarc->arc_suivant=temp->arc_suivant;
-            Newarc->sommet=temp->sommet;
+        if (temp->sommet > s2) {
+            Newarc->arc_suivant = temp->arc_suivant;
+            Newarc->sommet = temp->sommet;
             Newarc->poids = temp->poids;
             temp->sommet = s2;
             temp->poids = pond;
-            temp->arc_suivant=Newarc;
+            temp->arc_suivant = Newarc;
             return sommet;
         }
 
-        temp->arc_suivant=Newarc;
+        temp->arc_suivant = Newarc;
         return sommet;
     }
 }
@@ -48,9 +43,9 @@ Graphe* CreerGraphe(int ordre) {
 
 /* La construction du réseau peut se faire à partir d'un fichier dont le nom est passé en paramètre
 Le fichier contient : ordre, taille,orientation (0 ou 1)et liste des arcs */
-Graphe *lire_graphe(char * nomFichier) {
-    Graphe* graphe;
-    FILE * ifs = fopen(nomFichier, "r");
+Graphe *lire_graphe(char *nomFichier) {
+    Graphe *graphe;
+    FILE *ifs = fopen(nomFichier, "r");
     int taille, ordre, s1, s2, pond;
 
     if (!ifs) {
@@ -76,7 +71,7 @@ Graphe *lire_graphe(char * nomFichier) {
 
     // créer les arêtes du graphe
     for (int i = 0; i < taille; ++i) {
-        fscanf(ifs,"%d%d%d", &s1, &s2, &pond);
+        fscanf(ifs,"%d%d%f", &s1, &s2, &pond);
         graphe->pSommet = CreerArete(graphe->pSommet, s1, s2, pond);
         graphe->pSommet = CreerArete(graphe->pSommet, s2, s1, pond);
     }
@@ -91,7 +86,7 @@ void afficher_successeurs(pSommet * sommet, int num) {
     pArc arc = sommet[num]->arc;
 
     while(arc != NULL) {
-        printf("%d \t %d\n", arc->sommet, arc->poids);
+        printf("%d \t %.02f\n", arc->sommet, arc->poids);
         arc = arc->arc_suivant;
     }
 }

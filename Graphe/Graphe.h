@@ -9,7 +9,7 @@
 /* Structure d'un arc*/
 struct Arc {
     int sommet; // numéro de sommet d'un arc adjacent au sommet initial
-    int poids; // Pondération
+    float poids; // Pondération
     struct Arc* arc_suivant;
 };
 
@@ -19,6 +19,8 @@ typedef struct Arc* pArc;
 /* Structure d'un sommet*/
 struct Sommet {
     struct Arc* arc;
+    float quantité;
+    float croissance;
     int id;
 };
 

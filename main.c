@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <conio.h>
 #include "Processing/Processing.h"
 
 Graphe *retrieveNetwork() {
@@ -15,19 +14,26 @@ void afficher() {
     printf("+--[Networks]-[||]--+");
 }
 
-
 int main() {
     Graphe *graphe = retrieveNetwork();
 
-    char action = ' ';
+    char action = '0';
+    bool running = 1;
     
-    while(1) {
+    while(running) {
         afficher();
 
         if (kbhit()) {
             action = getch();
+            switch (action) {
+                case 'Q':
+                    running = 0;
+                    break;
+                case ' ':
+                    break;
+            }
             printf("%c\n", action);
-            action = ' ';
+            action = '0';
         }
     }
 
