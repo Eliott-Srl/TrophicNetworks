@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "Processing/Processing.h"
+#include "Simulation/Simulation.h"
+#include <time.h>
 
 Graphe *retrieveNetwork() {
     char filename[50];
@@ -19,6 +20,12 @@ int main() {
 
     char action = '0';
     bool running = 1;
+    float playSpeed = 0.0f;
+    float lastSpeed = 1.0f;
+    bool timeRunning = 0;
+
+    clock_t begin = clock();
+    clock_t end = clock();
     
     while(running) {
         afficher();
@@ -26,13 +33,42 @@ int main() {
         if (kbhit()) {
             action = getch();
             switch (action) {
-                case 'Q':
+                case 'q':
                     running = 0;
                     break;
                 case ' ':
+                case 'k':
+                    if (playSpeed == 0) {
+                        playSpeed = lastSpeed;
+                        lastSpeed = 0.0f;
+                        timeRunning = 1;
+                        end = clock();
+                    } else {
+                        lastSpeed = playSpeed;
+                        playSpeed = 0.0f;
+                        timeRunning = 0;
+                    }
+                    break;
+                case 'j':
+                    if (playSpeed != 0) {
+                        playSpeed -= 0.25f;
+                    }
+                    break;
+                case 'l':
+                    if (playSpeed != 0) {
+                        playSpeed += 0.25f;
+                    }
                     break;
             }
+            end = clock();
+
+            if (end - begin > (((long) 1 / (long) 60)) / (long) playSpeed) {
+                simulation(graphe, playSpeed);
+                begin = clock();
+            }
+
             printf("%c\n", action);
+
             action = '0';
         }
     }
