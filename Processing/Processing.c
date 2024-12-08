@@ -239,20 +239,4 @@ void afficherGraphe(Graphe* graphe) {
 
 
 
-void isolateSpecies(Graphe *graphe, int id) {
-    char action = ' ';
 
-    while(action != 'q') {
-        action = ' ';
-
-        printf("+--[Isolation: %s]-[Q: Quit]--+");
-
-        // Actions here
-
-        printf("+-------------------+");
-
-        if (kbhit()) {
-            action = getch();
-        }
-    }
-}

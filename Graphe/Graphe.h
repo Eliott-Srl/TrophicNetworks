@@ -22,6 +22,31 @@ struct Sommet {
     struct Arc *arc;
     float quantity;
     float croissance;
+    char* niveau_trophique;         // Niveau trophique
+    char* predateurs;               // Prédateurs naturels
+    char* proies;                   // Proies
+    char* predecesseurs;            // Prédécesseurs
+    char* successeurs;              // Successeurs
+    float biomasse;                 // Biomasse
+    float taux_reproduction;        // Taux de reproduction
+    float taux_mortalite;           // Taux de mortalité
+    char* feedback;                 // Feedback
+    char* variations_saison;        // Variations saisonnières
+    char* aliments_principaux;      // Aliments principaux
+    char* aliments_secondaires;    // Aliments secondaires
+    float part_aliments;            // Part des aliments
+    char* type_interaction;         // Type d'interaction
+    char* role_ecologique;          // Rôle écologique
+    float centralite_radiale;       // Centralité radiale des degrés
+    float centralite_intermed;      // Centralité d’intermédiarité
+    char* consequences_disparition; // Conséquences de la disparition
+    char* effets_feedback;          // Effets de feedback
+    char* contribution_nutriments;  // Contribution au cycle des nutriments
+    char* dependance_alimentaire;   // Dépendance alimentaire
+    char* risque_specialisation;    // Risque lié à la spécialisation
+    char* impact_trophique;         // Impact du niveau trophique
+    char* interdépendances;         // Interdépendances supplémentaires
+    char* consequences_supp;        // Conséquences supplémentaires
     // int portageEnvironnement;
     int id;
 };
