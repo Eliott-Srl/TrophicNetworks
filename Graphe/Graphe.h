@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "../Utils/Utils.h"
 
 #define bool int
 

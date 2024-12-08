@@ -36,13 +36,13 @@ pSommet* CreerArete(pSommet* sommet, int s1, int s2, float pond) {
 // créer le graphe
 Graphe* CreerGraphe(int ordre) {
     Graphe * Newgraphe = (Graphe*) malloc(sizeof(Graphe));
-    Newgraphe->pSommet = (pSommet*) malloc(ordre*sizeof(pSommet));
+    Newgraphe->pSommet = (pSommet*) malloc(ordre * sizeof(pSommet));
+    Newgraphe->ordre = ordre;
     return Newgraphe;
 }
 
-
 /* La construction du réseau peut se faire à partir d'un fichier dont le nom est passé en paramètre
-Le fichier contient : ordre, taille,orientation (0 ou 1)et liste des arcs */
+Le fichier contient : ordre, taille, orientation (0 ou 1) et liste des arcs */
 Graphe *lire_graphe(char *nomFichier) {
     Graphe *graphe;
     FILE *ifs = fopen(nomFichier, "r");
@@ -53,25 +53,23 @@ Graphe *lire_graphe(char *nomFichier) {
         exit(-1);
     }
 
-    fscanf(ifs,"%d", &ordre);
+    u_fscanf(ifs, "%d", &ordre);
 
     graphe = CreerGraphe(ordre); // créer le graphe d'ordre "ordre"
+
+    u_fscanf(ifs,"%d", &taille);
+    graphe->taille = taille;
 
     // Créer les sommets du graphe
     for (int i = 0; i < ordre; i++) {
         graphe->pSommet[i] = (pSommet) malloc(sizeof(struct Sommet));
-        fscanf(ifs, "%d", &graphe->pSommet[i]->id);
+        u_fscanf(ifs, "%d", &graphe->pSommet[i]->id);
         graphe->pSommet[i]->arc = NULL;
     }
 
-    fscanf(ifs,"%d", &taille);
-
-    graphe->ordre = ordre;
-    graphe->taille = taille;
-
     // créer les arêtes du graphe
     for (int i = 0; i < taille; ++i) {
-        fscanf(ifs,"%d%d%f", &s1, &s2, &pond);
+        u_fscanf(ifs,"%d%d%f", &s1, &s2, &pond);
         graphe->pSommet = CreerArete(graphe->pSommet, s1, s2, pond);
         graphe->pSommet = CreerArete(graphe->pSommet, s2, s1, pond);
     }
