@@ -1,18 +1,48 @@
-#include <stdio.h>
 #include "Simulation/Simulation.h"
 #include <time.h>
+#include <stdlib.h>
 
 Graphe *retrieveNetwork() {
     char filename[50];
 
-    printf("Vous voulez quelle réseau ?\n>>>");
-    gets_s(filename, 50);
+    //printf("Vous voulez quelle réseau ?\n>>>");
+    //gets(filename);
 
-    return lire_graphe(filename);
+    return lire_graphe("info_ferme.txt");
 }
 
-void afficher() {
-    printf("+--[Networks]-[||]--+");
+void afficher(Graphe *graphe, bool timeRunning) {
+    system(CLEAR);
+
+    int largeur = printf("+--[Networks]-[ J: ↘ | K: %s | L: ↗ ]-[S: Export image]--+\n", timeRunning ? "⏸" : "▶") - 1;
+    int la = 0;
+
+    for (int i = 0; i < graphe->ordre; i++) {
+        la = printf("| %c: ", graphe->names[i]);
+        for (int j = 0; j < largeur - la - 1; j++) {
+            printf(" ");
+        }
+        printf("|\n");
+
+        pArc arc = graphe->pSommet[i]->arc;
+
+        while(arc != NULL) {
+            la = printf("|  - %c (%f)", graphe->names[arc->sommet], arc->poids);
+
+            for (int j = 0; j < largeur - la - 1; j++) {
+                printf(" ");
+            }
+            printf("|\n");
+
+            arc = arc->arc_suivant;
+        }
+
+        la = printf("|");
+        for (int j = 0; j < la - 2; j++) {
+            printf(" ");
+        }
+        printf("|\n");
+    }
 }
 
 int main() {
@@ -28,8 +58,6 @@ int main() {
     clock_t end = clock();
     
     while(running) {
-        afficher();
-
         if (kbhit()) {
             action = getch();
             switch (action) {
@@ -62,8 +90,9 @@ int main() {
             }
             end = clock();
 
-            if (end - begin > (((long) 1 / (long) 60)) / (long) playSpeed) {
-                simulation(graphe, playSpeed);
+            if (end - begin > (long) 1 / (long) 60 / (long) playSpeed) {
+                simulation(graphe);
+                afficher(graphe, timeRunning);
                 begin = clock();
             }
 

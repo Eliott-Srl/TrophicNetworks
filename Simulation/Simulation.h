@@ -3,6 +3,6 @@
 
 #include "../Processing/Processing.h"
 
-void simulation(Graphe *graphe, const float playSpeed);
+void simulation(Graphe *graphe);
 
 #endif //SIMULATION_H

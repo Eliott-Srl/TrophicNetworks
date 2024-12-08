@@ -1,6 +1,6 @@
 #include "Simulation.h"
 
-void simulation(Graphe *graphe, const float playSpeed) {
+void simulation(Graphe *graphe) {
     for (int i = 0; i < graphe->ordre; i++) {
         pSommet espece = graphe->pSommet[i];
 
