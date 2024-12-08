@@ -9,4 +9,6 @@ add_executable(TrophicNetworks main.c
         Processing/Processing.c
         Processing/Processing.h
         Simulation/Simulation.c
-        Simulation/Simulation.h)
+        Simulation/Simulation.h
+        Utils/Utils.c
+        Utils/Utils.h)
