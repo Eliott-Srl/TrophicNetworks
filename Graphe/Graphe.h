@@ -77,5 +77,6 @@ void afficher_successeurs(pSommet *sommet, int num);
 
 /*affichage du graphe avec les successeurs de chaque sommet */
 void graphe_afficher(Graphe *graphe);
+void afficher_graphe(Graphe *graphe);
 
 #endif // GRAPHE_H_INCLUDED

@@ -54,20 +54,34 @@ Graphe *lire_graphe(char *nomFichier) {
         exit(-1);
     }
 
-    // Lecture de l'ordre et de la taille
-    u_fscanf(ifs, "%d", &ordre);
+    // Lire l'ordre du graphe
+    char ligne[1024]; // Pour stocker une ligne du fichier
+    do {
+        fgets(ligne, sizeof(ligne), ifs);
+    } while (ligne[0] == '#' || ligne[0] == '\n');  // Ignorer les lignes de commentaires et vides
+    sscanf(ligne, "%d", &ordre);  // Lecture de l'ordre du graphe
+
     graphe = CreerGraphe(ordre); // Créer le graphe d'ordre "ordre"
-    u_fscanf(ifs, "%d", &taille);
+
+    // Lire la taille du graphe
+    do {
+        fgets(ligne, sizeof(ligne), ifs);
+    } while (ligne[0] == '#' || ligne[0] == '\n');  // Ignorer les lignes de commentaires et vides
+    sscanf(ligne, "%d", &taille);  // Lecture de la taille du graphe
     graphe->taille = taille;
 
     // Lecture des sommets avec leurs informations
-    char ligne[1024]; // Pour stocker une ligne du fichier
     for (int i = 0; i < ordre; i++) {
         graphe->pSommet[i] = (pSommet) malloc(sizeof(struct Sommet));
         graphe->pSommet[i]->arc = NULL;
 
-        // Lire une ligne complète du fichier
-        fgets(ligne, 1024, ifs);
+        // Lire une ligne complète du fichier pour chaque sommet
+        do {
+            fgets(ligne, sizeof(ligne), ifs);
+        } while (ligne[0] == '#' || ligne[0] == '\n');  // Ignorer les lignes de commentaires et vides
+
+        // Supprimer le caractère de nouvelle ligne si présent
+        ligne[strcspn(ligne, "\n")] = 0;
 
         // Découper la ligne en champs séparés par des points-virgules
         char *token = strtok(ligne, ";");
@@ -88,14 +102,14 @@ Graphe *lire_graphe(char *nomFichier) {
         // Successeurs
         graphe->pSommet[i]->successeurs = strdup(token); token = strtok(NULL, ";");
 
-        // Biomasse
-        graphe->pSommet[i]->biomasse = (token[0] == 'N' || token[0] == '-') ? 0 : atof(token); token = strtok(NULL, ";");
+        // Biomasse : Utilisation de strtof au lieu de atof
+        graphe->pSommet[i]->biomasse = (token[0] == 'N' || token[0] == '-') ? 0 : strtof(token, NULL); token = strtok(NULL, ";");
 
-        // Taux de reproduction
-        graphe->pSommet[i]->taux_reproduction = atof(token); token = strtok(NULL, ";");
+        // Taux de reproduction : strtof
+        graphe->pSommet[i]->taux_reproduction = strtof(token, NULL); token = strtok(NULL, ";");
 
-        // Taux de mortalité
-        graphe->pSommet[i]->taux_mortalite = atof(token); token = strtok(NULL, ";");
+        // Taux de mortalité : strtof
+        graphe->pSommet[i]->taux_mortalite = strtof(token, NULL); token = strtok(NULL, ";");
 
         // Feedback
         graphe->pSommet[i]->feedback = strdup(token); token = strtok(NULL, ";");
@@ -109,8 +123,8 @@ Graphe *lire_graphe(char *nomFichier) {
         // Aliments secondaires
         graphe->pSommet[i]->aliments_secondaires = strdup(token); token = strtok(NULL, ";");
 
-        // Part des aliments
-        graphe->pSommet[i]->part_aliments = (token[0] == 'N' || token[0] == '-') ? 0 : atof(token); token = strtok(NULL, ";");
+        // Part des aliments : strtof
+        graphe->pSommet[i]->part_aliments = (token[0] == 'N' || token[0] == '-') ? 0 : strtof(token, NULL); token = strtok(NULL, ";");
 
         // Type d'interaction
         graphe->pSommet[i]->type_interaction = strdup(token); token = strtok(NULL, ";");
@@ -118,11 +132,11 @@ Graphe *lire_graphe(char *nomFichier) {
         // Rôle écologique
         graphe->pSommet[i]->role_ecologique = strdup(token); token = strtok(NULL, ";");
 
-        // Centralité radiale des degrés
-        graphe->pSommet[i]->centralite_radiale = atof(token); token = strtok(NULL, ";");
+        // Centralité radiale des degrés : strtof
+        graphe->pSommet[i]->centralite_radiale = strtof(token, NULL); token = strtok(NULL, ";");
 
-        // Centralité d’intermédiarité
-        graphe->pSommet[i]->centralite_intermed = atof(token); token = strtok(NULL, ";");
+        // Centralité d’intermédiarité : strtof
+        graphe->pSommet[i]->centralite_intermed = strtof(token, NULL); token = strtok(NULL, ";");
 
         // Conséquences de la disparition
         graphe->pSommet[i]->consequences_disparition = strdup(token); token = strtok(NULL, ";");
@@ -151,7 +165,12 @@ Graphe *lire_graphe(char *nomFichier) {
 
     // Lecture des arcs
     for (int i = 0; i < taille; ++i) {
-        u_fscanf(ifs, "%d%d%f", &s1, &s2, &pond);
+        do {
+            fgets(ligne, sizeof(ligne), ifs);
+        } while (ligne[0] == '#' || ligne[0] == '\n');  // Ignorer les lignes de commentaires et vides
+
+        // Lire les arcs (utilisation de sscanf pour lire directement les valeurs)
+        sscanf(ligne, "%d %d %f", &s1, &s2, &pond);
         graphe->pSommet = CreerArete(graphe->pSommet, s1, s2, pond);
         graphe->pSommet = CreerArete(graphe->pSommet, s2, s1, pond); // Si non orienté
     }
@@ -161,15 +180,6 @@ Graphe *lire_graphe(char *nomFichier) {
 }
 
 
-/* affichage des successeurs du sommet num*/
-void afficher_successeurs(pSommet * sommet, int num) {
-    printf(" sommet %d :\n", num);
 
-    pArc arc = sommet[num]->arc;
 
-    while(arc != NULL) {
-        printf("%d \t %.02f\n", arc->sommet, arc->poids);
-        arc = arc->arc_suivant;
-    }
-}
 

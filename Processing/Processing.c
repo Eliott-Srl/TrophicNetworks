@@ -206,28 +206,7 @@ void repercuterSuppression(Graphe* graphe, int id) {
 
 
 
-// Afficher le graphe maj
-void afficherGraphe(Graphe* graphe) {
-    printf("Graphe actuel :\n");
-    for (int i = 0; i < graphe->ordre; i++) {
-        if (graphe->pSommet[i]->quantity == -1) {
-            printf("Espèce %d : SUPPRIMÉE\n", i);
-            continue;
-        }
 
-        printf("Espèce %d (Quantité : %.2f, Croissance : %.2f) : ",
-               graphe->pSommet[i]->id,
-               graphe->pSommet[i]->quantity,
-               graphe->pSommet[i]->croissance);
-
-        pArc arc = graphe->pSommet[i]->arc;
-        while (arc != NULL) {
-            printf(" -> %d (Poids : %.2f)", arc->sommet, arc->poids);
-            arc = arc->arc_suivant;
-        }
-        printf("\n");
-    }
-}
 
 
 
