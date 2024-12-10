@@ -59,7 +59,19 @@ Graphe *lire_graphe(char *nomFichier) {
     // Lire l'ordre du graphe
     do {
         fgets(ligne, sizeof(ligne), ifs);
+        nbLigne++;
     } while (ligne[0] == '#' || ligne[0] == '\n');  // Ignorer les lignes de commentaires et vides
+
+    if (ligne[0] == ' ') {
+        printf("Erreur dans le fichier à la ligne %d: Espace suivi de rien\n", nbLigne);
+        exit(-1);
+    }
+
+    if (ligne[0] > '9' || ligne[0] < '0') {
+        printf("Erreur dans le fichier à la ligne %d: Pas un ordre correcte\n", nbLigne);
+        exit(-1);
+    }
+
     sscanf(ligne, "%d", &ordre);  // Lecture de l'ordre du graphe
 
     graphe = CreerGraphe(ordre); // Créer le graphe d'ordre "ordre"
@@ -67,8 +79,21 @@ Graphe *lire_graphe(char *nomFichier) {
     // Lire la taille du graphe
     do {
         fgets(ligne, sizeof(ligne), ifs);
+        nbLigne++;
     } while (ligne[0] == '#' || ligne[0] == '\n');  // Ignorer les lignes de commentaires et vides
+
+    if (ligne[0] == ' ') {
+        printf("Erreur dans le fichier à la ligne %d: Espace suivi de rien\n", nbLigne);
+        exit(-1);
+    }
+
+    if (ligne[0] > '9' || ligne[0] < '0') {
+        printf("Erreur dans le fichier à la ligne %d: Pas une taille correcte\n", nbLigne);
+        exit(-1);
+    }
+
     sscanf(ligne, "%d", &taille);  // Lecture de la taille du graphe
+
     graphe->taille = taille;
 
     // Lecture des sommets avec leurs informations
@@ -79,10 +104,13 @@ Graphe *lire_graphe(char *nomFichier) {
         // Lire une ligne complète du fichier pour chaque sommet
         do {
             fgets(ligne, sizeof(ligne), ifs);
+            nbLigne++;
         } while (ligne[0] == '#' || ligne[0] == '\n');  // Ignorer les lignes de commentaires et vides
 
-        // Supprimer le caractère de nouvelle ligne si présent
-        ligne[strcspn(ligne, "\n")] = 0;
+        if (ligne[0] == ' ') {
+            printf("Erreur dans le fichier à la ligne %d: Espace suivi de rien\n", nbLigne);
+            exit(-1);
+        }
 
         // Découper la ligne en champs séparés par des points-virgules
         char *token = strtok(ligne, ";");
@@ -93,8 +121,10 @@ Graphe *lire_graphe(char *nomFichier) {
 
         int conv = strtol(token, NULL, 10);
 
-        // Variations saisonnières
-        graphe->pSommet[i]->variations_saison = strdup(token); token = strtok(NULL, ";");
+        if (conv == 0) {
+            printf("Erreur dans le fichier à la ligne %d: Pas une espece correcte\n", nbLigne);
+            exit(-1);
+        }
 
         graphe->pSommet[i]->croissance = 1.0f / (float) conv;
 
@@ -106,7 +136,18 @@ Graphe *lire_graphe(char *nomFichier) {
     for (int i = 0; i < taille; ++i) {
         do {
             fgets(ligne, sizeof(ligne), ifs);
+            nbLigne++;
         } while (ligne[0] == '#' || ligne[0] == '\n');  // Ignorer les lignes de commentaires et vides
+
+        if (ligne[0] == ' ') {
+            printf("Erreur dans le fichier à la ligne %d: Espace suivi de rien\n", nbLigne);
+            exit(-1);
+        }
+
+        if (ligne[0] > '9' || ligne[0] < '0') {
+            printf("Erreur dans le fichier à la ligne %d: Pas un arc correcte\n", nbLigne);
+            exit(-1);
+        }
 
         // Lire les arcs (utilisation de sscanf pour lire directement les valeurs)
         sscanf(ligne, "%d %d %f", &s1, &s2, &pond);

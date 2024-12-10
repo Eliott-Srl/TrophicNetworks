@@ -12,7 +12,7 @@ Graphe *retrieveNetwork() {
 }
 
 void afficher(Graphe *graphe, bool timeRunning) {
-    system(CLEAR);
+    //system(CLEAR);
 
     int largeur = printf("+--[Networks]-[ J: ↘ | K: %s | L: ↗ ]-[S: Export image]--+\n", timeRunning ? "⏸" : "▶") - 1;
     int la = 0;
