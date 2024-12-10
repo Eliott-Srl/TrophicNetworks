@@ -4,8 +4,7 @@ void simulation(Graphe *graphe) {
     for (int i = 0; i < graphe->ordre; i++) {
         pSommet espece = graphe->pSommet[i];
 
-        float portageEnvironnement = 0;
-        espece->quantity = espece->quantity;
+        double portageEnvironnement = 0;
 
         for (int j = 0; j < graphe->ordre; j++) {
             pSommet influence = graphe->pSommet[j];
@@ -13,8 +12,8 @@ void simulation(Graphe *graphe) {
             pArc arc = influence->arc;
             while(arc != NULL) {
                 if (arc->sommet == espece->id) {
-                    portageEnvironnement += arc->poids * (float) influence->quantity;
-                    espece->quantity -= arc->poids * (float) influence->quantity;
+                    portageEnvironnement += arc->poids * influence->quantity;
+                    espece->quantity -= arc->poids * influence->quantity;
                 }
                 arc = arc->arc_suivant;
             }

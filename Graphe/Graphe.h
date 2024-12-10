@@ -11,7 +11,7 @@
 /* Structure d'un arc*/
 struct Arc {
     int sommet; // numéro de sommet d'un arc adjacent au sommet initial
-    float poids; // Pondération
+    double poids; // Pondération
     struct Arc *arc_suivant;
 };
 
@@ -21,8 +21,6 @@ typedef struct Arc *pArc;
 /* Structure d'un sommet*/
 struct Sommet {
     struct Arc *arc;
-    float quantity;
-    float croissance;
     double quantity;
     double croissance;
     // int portageEnvironnement;
@@ -36,7 +34,7 @@ typedef struct Sommet *pSommet;
 typedef struct Graphe {
     int taille;
     int ordre;
-    char *names; // Tableau des noms des sommets, l'index du nom correspond à l'id du sommet
+    char **names; // Tableau des noms des sommets, l'index du nom correspond à l'id du sommet
     pSommet *pSommet;
 } Graphe;
 

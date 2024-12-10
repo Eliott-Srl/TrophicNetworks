@@ -46,8 +46,9 @@ Le fichier contient : ordre, taille, orientation (0 ou 1) et liste des arcs */
 Graphe *lire_graphe(char *nomFichier) {
     Graphe *graphe;
     FILE *ifs = fopen(nomFichier, "r");
-    int taille, ordre, s1, s2;
-    float pond;
+    int taille, ordre;
+    float pond = (float) 0;
+    int nbLigne = 0;
 
     if (!ifs) {
         printf("Erreur de lecture fichier\n");
@@ -74,6 +75,7 @@ Graphe *lire_graphe(char *nomFichier) {
 
     sscanf(ligne, "%d", &ordre);  // Lecture de l'ordre du graphe
 
+    // Creation de la base du graphe
     graphe = CreerGraphe(ordre); // Créer le graphe d'ordre "ordre"
 
     // Lire la taille du graphe
@@ -96,7 +98,9 @@ Graphe *lire_graphe(char *nomFichier) {
 
     graphe->taille = taille;
 
-    // Lecture des sommets avec leurs informations
+    // Lecture des noms
+    graphe->names = (char **) malloc(graphe->ordre * sizeof(char *));
+
     for (int i = 0; i < ordre; i++) {
         graphe->pSommet[i] = (pSommet) malloc(sizeof(struct Sommet));
         graphe->pSommet[i]->arc = NULL;
@@ -112,7 +116,8 @@ Graphe *lire_graphe(char *nomFichier) {
             exit(-1);
         }
 
-        // Découper la ligne en champs séparés par des points-virgules
+        // ligne[strcspn(ligne, "\n")] = 0; // 🤷‍♂️ idk
+
         char *token = strtok(ligne, ";");
 
         graphe->names[i] = strdup(token);
@@ -150,9 +155,20 @@ Graphe *lire_graphe(char *nomFichier) {
         }
 
         // Lire les arcs (utilisation de sscanf pour lire directement les valeurs)
-        sscanf(ligne, "%d %d %f", &s1, &s2, &pond);
-        graphe->pSommet = CreerArete(graphe->pSommet, s1, s2, pond);
-        graphe->pSommet = CreerArete(graphe->pSommet, s2, s1, pond); // Si non orienté
+        char *token = strtok(ligne, " ");
+
+        int s1 = strtol(token, NULL, 10);
+
+        token = strtok(NULL, " ");
+
+        int s2 = strtol(token, NULL, 10);
+
+        token = strtok(NULL, " ");
+
+        pond = strtof(token, NULL);
+
+        graphe->pSommet = CreerArete(graphe->pSommet, s1 - 1, s2 - 1, (float) 10 / (float) pond);
+        // graphe->pSommet = CreerArete(graphe->pSommet, s2 - 1, s1 - 1, -10.0f / (float) pond);
     }
 
     fclose(ifs);

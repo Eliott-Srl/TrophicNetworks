@@ -27,7 +27,7 @@ void afficher(Graphe *graphe, bool timeRunning) {
         pArc arc = graphe->pSommet[i]->arc;
 
         while(arc != NULL) {
-            la = printf("|  - %c (%f)", graphe->names[arc->sommet], arc->poids);
+            la = printf("|  - %s (%.3f)", graphe->names[arc->sommet], arc->poids);
 
             for (int j = 0; j < largeur - la - 1; j++) {
                 printf(" ");
