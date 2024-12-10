@@ -37,16 +37,29 @@ void afficher(Graphe *graphe, bool timeRunning) {
             arc = arc->arc_suivant;
         }
 
-        la = printf("|");
-        for (int j = 0; j < la - 2; j++) {
-            printf(" ");
+        if (i != graphe->ordre - 1) {
+            la = printf("|");
+            for (int j = 0; j < largeur - la - 1; j++) {
+                printf(" ");
+            }
+            printf("|\n");
+        } else {
+            la = printf("+");
+            for (int j = 0; j < largeur - la - 1; j++) {
+                printf("-");
+            }
+            printf("+\n\n");
         }
-        printf("|\n");
     }
 }
 
 int main() {
     Graphe *graphe = retrieveNetwork();
+
+    for (int i = 0; i < graphe->ordre; i++) {
+        char * a = graphe->names[i];
+        printf("%s\n", a);
+    }
 
     char action = '0';
     bool running = 1;
@@ -88,17 +101,17 @@ int main() {
                     }
                     break;
             }
-            end = clock();
-
-            if (end - begin > (long) 1 / (long) 60 / (long) playSpeed) {
-                simulation(graphe);
-                afficher(graphe, timeRunning);
-                begin = clock();
-            }
 
             printf("%c\n", action);
 
             action = '0';
+        }
+        end = clock();
+
+        if (end - begin > CLOCKS_PER_SEC) {
+            afficher(graphe, timeRunning);
+            simulation(graphe);
+            begin = clock();
         }
     }
 
