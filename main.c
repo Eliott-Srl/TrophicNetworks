@@ -22,6 +22,8 @@ int main() {
 
     clock_t begin = clock();
     clock_t end = clock();
+
+    afficher(graphe, timeRunning);
     
     while(running) {
         if (kbhit()) {
@@ -59,9 +61,9 @@ int main() {
         }
         end = clock();
 
-        if (end - begin > CLOCKS_PER_SEC) {
-            afficher(graphe, timeRunning);
+        if (timeRunning == 1 && end - begin > CLOCKS_PER_SEC) {
             simulation(graphe);
+            afficher(graphe, timeRunning);
             begin = clock();
         }
     }
