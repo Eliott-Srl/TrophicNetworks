@@ -14,11 +14,6 @@ Graphe *retrieveNetwork() {
 int main() {
     Graphe *graphe = retrieveNetwork();
 
-    for (int i = 0; i < graphe->ordre; i++) {
-        char * a = graphe->names[i];
-        printf("%s\n", a);
-    }
-
     char action = '0';
     bool running = 1;
     float playSpeed = 0.0f;
@@ -59,8 +54,6 @@ int main() {
                     }
                     break;
             }
-
-            printf("%c\n", action);
 
             action = '0';
         }
