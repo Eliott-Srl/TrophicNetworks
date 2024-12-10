@@ -175,7 +175,44 @@ Graphe *lire_graphe(char *nomFichier) {
     return graphe;
 }
 
+void afficher(Graphe *graphe, bool timeRunning) {
+    // system(CLEAR);
 
+    int largeur = printf("+--[Networks]-[ J: ↘ | K: %s | L: ↗ ]-[S: Export image]--+\n", timeRunning ? "⏸" : "▶") - 1;
+    int la = 0;
 
+    for (int i = 0; i < graphe->ordre; i++) {
+        la = printf("| %s (%d): ", graphe->names[i], (int) graphe->pSommet[i]->quantity);
+        for (int j = 0; j < largeur - la - 1; j++) {
+            printf(" ");
+        }
+        printf("|\n");
 
+        pArc arc = graphe->pSommet[i]->arc;
 
+        while(arc != NULL) {
+            la = printf("|  - %s (%.3f)", graphe->names[arc->sommet], arc->poids);
+
+            for (int j = 0; j < largeur - la - 1; j++) {
+                printf(" ");
+            }
+            printf("|\n");
+
+            arc = arc->arc_suivant;
+        }
+
+        if (i != graphe->ordre - 1) {
+            la = printf("|");
+            for (int j = 0; j < largeur - la - 1; j++) {
+                printf(" ");
+            }
+            printf("|\n");
+        } else {
+            la = printf("+");
+            for (int j = 0; j < largeur - la - 1; j++) {
+                printf("-");
+            }
+            printf("+\n\n");
+        }
+    }
+}

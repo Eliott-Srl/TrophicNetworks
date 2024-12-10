@@ -48,11 +48,7 @@ Graphe *lire_graphe(char *nomFichier);
 // Ajouter l'arête entre les sommets s1 et s2 du graphe
 pSommet *CreerArete(pSommet *sommet, int s1, int s2, float pond);
 
-/* affichage des successeurs du sommet num*/
-void afficher_successeurs(pSommet *sommet, int num);
-
-/*affichage du graphe avec les successeurs de chaque sommet */
-void graphe_afficher(Graphe *graphe);
-void afficher_graphe(Graphe *graphe);
+// Récupére
+void afficher(Graphe *graphe, bool timeRunning);
 
 #endif // GRAPHE_H_INCLUDED
