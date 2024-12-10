@@ -50,5 +50,6 @@ pSommet *CreerArete(pSommet *sommet, int s1, int s2, float pond);
 
 // Récupére
 void afficher(Graphe *graphe, bool timeRunning);
+void generate_dynamic_dot_file(Graphe *graphe, const char *output_file);
 
 #endif // GRAPHE_H_INCLUDED

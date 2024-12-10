@@ -216,3 +216,40 @@ void afficher(Graphe *graphe, bool timeRunning) {
         }
     }
 }
+
+
+void generate_dynamic_dot_file(Graphe *graphe, const char *output_file) {
+    FILE *output = fopen(output_file, "w");
+    if (!output) {
+        perror("Erreur lors de l'ouverture du fichier DOT");
+        return;
+    }
+
+
+    // Écriture de l'en-tête du graphe
+    fprintf(output, "digraph Graphe {\n");
+    fprintf(output, "    node [shape=circle];\n\n");
+
+    // Sommets avec leurs populations actuelles
+    for (int i = 0; i < graphe->ordre; i++) {
+        fprintf(output, "    \"%s\" [label=\"%s\\nPop: %.2f\"];\n",
+                graphe->names[i], graphe->names[i], graphe->pSommet[i]->quantity);
+    }
+
+    fprintf(output, "\n");
+
+    // Arcs avec leurs poids
+    for (int i = 0; i < graphe->ordre; i++) {
+        pArc arc = graphe->pSommet[i]->arc;
+        while (arc) {
+            fprintf(output, "    \"%s\" -> \"%s\" [label=\"%.3f\"];\n",
+                    graphe->names[i], graphe->names[arc->sommet], arc->poids);
+            arc = arc->arc_suivant;
+        }
+    }
+
+    fprintf(output, "}\n");
+    fclose(output);
+    printf("Fichier DOT genere : %s\n", output_file);
+}
+

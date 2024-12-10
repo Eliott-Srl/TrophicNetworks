@@ -8,11 +8,16 @@ Graphe *retrieveNetwork() {
     //printf("Vous voulez quelle réseau ?\n>>>");
     //gets(filename);
 
-    return lire_graphe("info_ferme.txt");
+    return lire_graphe("info_ferme");
 }
 
 int main() {
     Graphe *graphe = retrieveNetwork();
+
+    if (!graphe) {
+        printf("Erreur : le graphe n'a pas pu être chargé.\n");
+        return 1;
+    }
 
     char action = '0';
     bool running = 1;
@@ -24,8 +29,16 @@ int main() {
     clock_t end = clock();
 
     afficher(graphe, timeRunning);
-    
-    while(running) {
+    // Génération du fichier DOT
+    char dot_file[256];
+    sprintf(dot_file, "graph_step_%d.dot", timeRunning);
+    generate_dynamic_dot_file(graphe, dot_file);
+
+
+
+
+
+while(running) {
         if (kbhit()) {
             action = getch();
             switch (action) {
@@ -67,6 +80,7 @@ int main() {
             begin = clock();
         }
     }
+
 
     return 0;
 }
