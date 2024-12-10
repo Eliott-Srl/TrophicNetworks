@@ -18,7 +18,7 @@ void afficher(Graphe *graphe, bool timeRunning) {
     int la = 0;
 
     for (int i = 0; i < graphe->ordre; i++) {
-        la = printf("| %c: ", graphe->names[i]);
+        la = printf("| %s (%d): ", graphe->names[i], (int) graphe->pSommet[i]->quantity);
         for (int j = 0; j < largeur - la - 1; j++) {
             printf(" ");
         }

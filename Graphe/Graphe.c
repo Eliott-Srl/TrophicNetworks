@@ -54,8 +54,9 @@ Graphe *lire_graphe(char *nomFichier) {
         exit(-1);
     }
 
-    // Lire l'ordre du graphe
     char ligne[1024]; // Pour stocker une ligne du fichier
+
+    // Lire l'ordre du graphe
     do {
         fgets(ligne, sizeof(ligne), ifs);
     } while (ligne[0] == '#' || ligne[0] == '\n');  // Ignorer les lignes de commentaires et vides
@@ -86,81 +87,19 @@ Graphe *lire_graphe(char *nomFichier) {
         // Découper la ligne en champs séparés par des points-virgules
         char *token = strtok(ligne, ";");
 
-        // Associer chaque champ à l'attribut correspondant
-        graphe->pSommet[i]->id = i; // Identifiant du sommet
-        graphe->pSommet[i]->niveau_trophique = strdup(token); token = strtok(NULL, ";");
+        graphe->names[i] = strdup(token);
 
-        // Prédateurs naturels
-        graphe->pSommet[i]->predateurs = strdup(token); token = strtok(NULL, ";");
+        token = strtok(NULL, ";");
 
-        // Proies (ensemble séparé par des virgules)
-        graphe->pSommet[i]->proies = strdup(token); token = strtok(NULL, ";");
-
-        // Prédécesseurs
-        graphe->pSommet[i]->predecesseurs = strdup(token); token = strtok(NULL, ";");
-
-        // Successeurs
-        graphe->pSommet[i]->successeurs = strdup(token); token = strtok(NULL, ";");
-
-        // Biomasse : Utilisation de strtof au lieu de atof
-        graphe->pSommet[i]->biomasse = (token[0] == 'N' || token[0] == '-') ? 0 : strtof(token, NULL); token = strtok(NULL, ";");
-
-        // Taux de reproduction : strtof
-        graphe->pSommet[i]->taux_reproduction = strtof(token, NULL); token = strtok(NULL, ";");
-
-        // Taux de mortalité : strtof
-        graphe->pSommet[i]->taux_mortalite = strtof(token, NULL); token = strtok(NULL, ";");
-
-        // Feedback
-        graphe->pSommet[i]->feedback = strdup(token); token = strtok(NULL, ";");
+        int conv = strtol(token, NULL, 10);
 
         // Variations saisonnières
         graphe->pSommet[i]->variations_saison = strdup(token); token = strtok(NULL, ";");
 
-        // Aliments principaux
-        graphe->pSommet[i]->aliments_principaux = strdup(token); token = strtok(NULL, ";");
+        graphe->pSommet[i]->croissance = 1.0f / (float) conv;
 
-        // Aliments secondaires
-        graphe->pSommet[i]->aliments_secondaires = strdup(token); token = strtok(NULL, ";");
-
-        // Part des aliments : strtof
-        graphe->pSommet[i]->part_aliments = (token[0] == 'N' || token[0] == '-') ? 0 : strtof(token, NULL); token = strtok(NULL, ";");
-
-        // Type d'interaction
-        graphe->pSommet[i]->type_interaction = strdup(token); token = strtok(NULL, ";");
-
-        // Rôle écologique
-        graphe->pSommet[i]->role_ecologique = strdup(token); token = strtok(NULL, ";");
-
-        // Centralité radiale des degrés : strtof
-        graphe->pSommet[i]->centralite_radiale = strtof(token, NULL); token = strtok(NULL, ";");
-
-        // Centralité d’intermédiarité : strtof
-        graphe->pSommet[i]->centralite_intermed = strtof(token, NULL); token = strtok(NULL, ";");
-
-        // Conséquences de la disparition
-        graphe->pSommet[i]->consequences_disparition = strdup(token); token = strtok(NULL, ";");
-
-        // Effets de feedback
-        graphe->pSommet[i]->effets_feedback = strdup(token); token = strtok(NULL, ";");
-
-        // Contribution au cycle des nutriments
-        graphe->pSommet[i]->contribution_nutriments = strdup(token); token = strtok(NULL, ";");
-
-        // Dépendance alimentaire
-        graphe->pSommet[i]->dependance_alimentaire = strdup(token); token = strtok(NULL, ";");
-
-        // Risque lié à la spécialisation
-        graphe->pSommet[i]->risque_specialisation = strdup(token); token = strtok(NULL, ";");
-
-        // Impact du niveau trophique
-        graphe->pSommet[i]->impact_trophique = strdup(token); token = strtok(NULL, ";");
-
-        // Interdépendances supplémentaires
-        graphe->pSommet[i]->interdépendances = strdup(token); token = strtok(NULL, ";");
-
-        // Conséquences supplémentaires
-        graphe->pSommet[i]->consequences_supp = strdup(token); token = strtok(NULL, ";");
+        graphe->pSommet[i]->id = i;
+        graphe->pSommet[i]->quantity = 100;
     }
 
     // Lecture des arcs
