@@ -19,3 +19,9 @@ int u_fscanf(FILE *__stream, const char *__format, ...) {
 
     return vfscanf(__stream, __format, vaList);
 }
+
+// Function to empty the scanf buffer
+void emptyScanf() {
+    int c;
+    while((c = getchar()) != EOF && c != '\n');
+}

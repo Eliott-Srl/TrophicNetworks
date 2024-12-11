@@ -11,6 +11,14 @@ Graphe *retrieveNetwork() {
     return lire_graphe("info_ferme");
 }
 
+void screenshot(Graphe *graphe, int *screen) {
+    // Génération du fichier DOT
+    char dot_file[256];
+    (*screen)++;
+    sprintf(dot_file, "graph_step_%d.dot", *screen);
+    generate_dynamic_dot_file(graphe, dot_file);
+}
+
 int main() {
     Graphe *graphe = retrieveNetwork();
 
@@ -24,21 +32,14 @@ int main() {
     float playSpeed = 0.0f;
     float lastSpeed = 1.0f;
     bool timeRunning = 0;
+    int screen = 0;
 
     clock_t begin = clock();
     clock_t end = clock();
 
     afficher(graphe, timeRunning);
-    // Génération du fichier DOT
-    char dot_file[256];
-    sprintf(dot_file, "graph_step_%d.dot", timeRunning);
-    generate_dynamic_dot_file(graphe, dot_file);
 
-
-
-
-
-while(running) {
+    while(running) {
         if (kbhit()) {
             action = getch();
             switch (action) {
@@ -68,9 +69,16 @@ while(running) {
                         playSpeed += 0.25f;
                     }
                     break;
+                case 's':
+                    screenshot(graphe, &screen);
+                    break;
+                case 'g':
+                    timeRunning = 0;
+                    isolateSpecie(graphe);
             }
 
             action = '0';
+            emptyScanf();
         }
         end = clock();
 
