@@ -3,7 +3,23 @@
 #include "Processing.h"
 
 bool primaryProductor(Graphe* graphe, int id) {
+    if (id < 0 || id >= graphe->ordre) {
+        printf("Erreur : id invalide.\n");
+        return 0;
+    }
 
+    // Parcourir les arcs sortants du sommet `id`
+    pArc arc = graphe->pSommet[id]->arc;
+    while (arc != NULL) {
+        // Si un arc sortant existe c'est un looser
+        return 0;
+    }
+
+    // Si aucun arc sortant trouvé c'est un predateur
+    return 1;
+}
+
+bool predateur(Graphe* graphe, int id) {
     if (id < 0 || id >= graphe->ordre) {
         printf("Erreur : id invalide.\n");
         return 0;
@@ -70,16 +86,16 @@ void calculerNiveauTrophique(Graphe* graphe, int id, int** niveaux, int* tailles
     }
 }
 
-void trophicLevels(Graphe* graphe, int id) {
+void trophicLevels(Graphe* graphe, int *tailles, int id) {
+    int printed = 0;
     // Vérification du graphe
     if (graphe == NULL || graphe->pSommet == NULL) {
         printf("Erreur : graphe invalide.\n");
-        return;
+        exit(-1);
     }
 
     // Initialiser les tableaux pour stocker les niveaux trophiques
     int** niveaux = malloc(graphe->ordre * sizeof(int*));
-    int* tailles = malloc(graphe->ordre * sizeof(int));
 
     for (int i = 0; i < graphe->ordre; i++) {
         niveaux[i] = malloc(graphe->ordre * sizeof(int)); // Chaque espèce peut avoir jusqu'à "ordre" niveaux

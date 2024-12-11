@@ -5,8 +5,6 @@
 
 #include <conio.h>
 
-bool primaryProductor(Graphe *graphe, int id);
-
-void isolateSpecies(int id);
+void isolateSpecie(Graphe *graphe);
 
 #endif //TROPHICNETWORKS_PROCESSING_H
