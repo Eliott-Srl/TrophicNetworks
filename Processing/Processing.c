@@ -86,7 +86,7 @@ void calculerNiveauTrophique(Graphe* graphe, int id, int** niveaux, int* tailles
     }
 }
 
-void trophicLevels(Graphe* graphe, int *tailles, int id) {
+void trophicLevels(Graphe* graphe, int** niveaux, int* tailles, int id) {
     int printed = 0;
     // Vérification du graphe
     if (graphe == NULL || graphe->pSommet == NULL) {
@@ -94,42 +94,9 @@ void trophicLevels(Graphe* graphe, int *tailles, int id) {
         exit(-1);
     }
 
-    // Initialiser les tableaux pour stocker les niveaux trophiques
-    int** niveaux = malloc(graphe->ordre * sizeof(int*));
-
     for (int i = 0; i < graphe->ordre; i++) {
-        niveaux[i] = malloc(graphe->ordre * sizeof(int)); // Chaque espèce peut avoir jusqu'à "ordre" niveaux
-        tailles[i] = -1; // Initialiser la taille à -1 (non calculé)
+        calculerNiveauTrophique(graphe, i, niveaux, tailles);
     }
-
-    // Si un id spécifique est donné
-    if (id >= 0 && id < graphe->ordre) {
-        // printf("Calcul des niveaux trophiques pour l'espèce %d :\n", id);
-        calculerNiveauTrophique(graphe, id, niveaux, tailles);
-        // printf("Espèce %d : Niveaux trophiques possibles : ", id);
-        for (int i = 0; i < tailles[id]; i++) {
-            printf("%d ", niveaux[id][i]);
-        }
-        printf("\n");
-    } else {
-        // Calculer pour toutes les espèces
-        printf("Niveaux trophiques pour toutes les espèces :\n");
-        for (int i = 0; i < graphe->ordre; i++) {
-            calculerNiveauTrophique(graphe, i, niveaux, tailles);
-            printf("Espèce %d : Niveaux trophiques possibles : ", i);
-            for (int j = 0; j < tailles[i]; j++) {
-                printf("%d ", niveaux[i][j]);
-            }
-            printf("\n");
-        }
-    }
-
-    // Libérer la mémoire
-    for (int i = 0; i < graphe->ordre; i++) {
-        free(niveaux[i]);
-    }
-
-    free(niveaux);
 }
 
 // Supprime une espèce et ses arcs associés
@@ -239,10 +206,27 @@ void isolateSpecie(Graphe *graphe) {
     la = printf("| Niveaux trophique: ");
 
     int* tailles = calloc(graphe->ordre, sizeof(int));
-    trophicLevels(graphe, tailles, choix - 1);
+    int** niveaux = malloc(graphe->ordre * sizeof(int*));
+
+    for (int i = 0; i < graphe->ordre; i++) {
+        niveaux[i] = calloc(graphe->ordre, sizeof(int)); // Chaque espèce peut avoir jusqu'à "ordre" niveaux
+        tailles[i] = -1; // Initialiser la taille à -1 (non calculé)
+    }
+
+    trophicLevels(graphe, niveaux, tailles, choix - 1);
+
+    for (int i = 0; i < tailles[choix - 1]; i++) {
+        printf("%d ", niveaux[choix - 1][i]);
+    }
 
     fillIn(LARGEURPRINT - la - tailles[choix - 1], ' ', '|');
 
+    // Libérer la mémoire
+    for (int i = 0; i < graphe->ordre; i++) {
+        free(niveaux[i]);
+    }
+
+    free(niveaux);
     free(tailles);
 
     printSquaredReturn('+', '-');
