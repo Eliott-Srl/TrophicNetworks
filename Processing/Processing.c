@@ -40,7 +40,6 @@ bool predateur(Graphe* graphe, int id) {
     return 1;
 }
 
-
 // Ajouter un niveau trophique à la liste s'il n'existe pas déjà
 void ajouterNiveau(int* niveaux, int* taille, int niveau) {
     for (int i = 0; i < *taille; i++) {
@@ -72,6 +71,7 @@ void calculerNiveauTrophique(Graphe* graphe, int id, int** niveaux, int* tailles
     // Parcourir tous les sommets pour trouver les prédécesseurs
     for (int i = 0; i < graphe->ordre; i++) {
         pArc arc = graphe->pSommet[i]->arc;
+
         while (arc != NULL) {
             if (arc->sommet == id) {
                 // Calculer récursivement les niveaux trophiques pour le prédécesseur
@@ -87,8 +87,8 @@ void calculerNiveauTrophique(Graphe* graphe, int id, int** niveaux, int* tailles
     }
 }
 
-
-void trophicLevels(Graphe* graphe, int** niveaux, int* tailles, int id) {
+int trophicLevels(Graphe* graphe, int** niveaux, int* tailles, int id) {
+    int la = 0;
     if (graphe == NULL || graphe->pSommet == NULL) {
         printf("Erreur : graphe invalide.\n");
         exit(-1);
@@ -96,29 +96,22 @@ void trophicLevels(Graphe* graphe, int** niveaux, int* tailles, int id) {
 
     if (id < 0 || id >= graphe->ordre) {
         printf("Erreur : id invalide.\n");
-        return;
+        exit(-1);
     }
 
     // Calculer les niveaux trophiques
     for (int i = 0; i < graphe->ordre; i++) {
         calculerNiveauTrophique(graphe, i, niveaux, tailles);
-        printf("Niveaux calcules pour %d (taille : %d): ", i, tailles[i]);
-        for (int j = 0; j < tailles[i]; j++) {
-            printf("%d ", niveaux[i][j]);
-        }
-        printf("\n");
     }
 
     // Afficher les niveaux pour l'espèce demandée
-    printf("Niveaux trophiques pour l'espece %d : ", id);
     for (int i = 0; i < tailles[id]; i++) {
-        printf("%d ", niveaux[id][i]);
+        la += printf("%d ", niveaux[id][i]);
     }
-    printf("\n");
+    la += printf("\n");
+
+    return la;
 }
-
-
-
 
 // Supprime une espèce et ses arcs associés
 void supprimerEspece(Graphe* graphe, int id) {
@@ -224,6 +217,12 @@ void isolateSpecie(Graphe *graphe) {
         fillIn(LARGEURPRINT - la, ' ', '|');
     }
 
+    if (predateur(graphe, choix - 1)) {
+        la = printf("| L'espece est un predateur principal");
+
+        fillIn(LARGEURPRINT - la, ' ', '|');
+    }
+
     la = printf("| Niveaux trophique: ");
 
     int* tailles = calloc(graphe->ordre, sizeof(int));
@@ -234,12 +233,12 @@ void isolateSpecie(Graphe *graphe) {
         tailles[i] = -1; // Initialiser la taille à -1 (non calculé)
     }
 
+    la += printf("%d", trophicLevels(graphe, niveaux, tailles, choix - 1));
 
-
-    la = printf("%d",graphe->pSommet[choix-1]-> Niv);
-
-
-    fillIn(LARGEURPRINT - la - tailles[choix - 1], ' ', '|');
+    fillIn(LARGEURPRINT - la, ' ', '|');
 
     printSquaredReturn('+', '-');
+
+    printf("Appuie sur n'importe quelle touche pour revenir au menu\n");
+    scanf(" ");
 }

@@ -23,6 +23,7 @@ struct Sommet {
     struct Arc *arc;
     double quantity;
     double croissance;
+    int Niv;
     // int portageEnvironnement;
     int id;
 };

@@ -2,29 +2,39 @@
 #include <time.h>
 #include <stdlib.h>
 
+#define DEBUG 0
+
 Graphe *retrieveNetwork() {
-    char filename[50];
+    if (DEBUG) {
+        return lire_graphe("info_ferme");
+    } else {
+        char filename[50];
 
-    //printf("Vous voulez quelle réseau ?\n>>>");
-    //gets(filename);
+        printf("Vous voulez quelle réseau ?\n>>>");
+        gets(filename);
 
-    return lire_graphe("info_ferme");
+        return lire_graphe(filename);
+    }
 }
 
 void screenshot(Graphe *graphe, int *screen) {
     // Génération du fichier DOT
-    char dot_file[256];
+    char png_cmd[256];
     (*screen)++;
-    sprintf(dot_file, "graph_step_%d.dot", *screen);
-    generate_dynamic_dot_file(graphe, dot_file);
+    printf("Conversion du graphe en cours...\n");
+    generate_dynamic_dot_file(graphe, "graph_temp.dot");
+    sprintf(png_cmd, "\"Graphviz\\bin\\dot.exe\" -Tpng graph_temp.dot > graph_%d.png", *screen);
+    system(png_cmd);
+    remove("graph_temp.dot");
+    printf("Screenshot enregistre sous le nom: graph_%d.png\n", *screen);
 }
 
-int main() {
+void base() {
     Graphe *graphe = retrieveNetwork();
 
     if (!graphe) {
         printf("Erreur : le graphe n'a pas pu être chargé.\n");
-        return 1;
+        exit(-1);
     }
 
     char action = '0';
@@ -44,8 +54,7 @@ int main() {
             action = getch();
             switch (action) {
                 case 'q':
-                    running = 0;
-                    break;
+                    exit(0);
                 case ' ':
                 case 'k':
                     if (playSpeed == 0) {
@@ -75,20 +84,23 @@ int main() {
                 case 'g':
                     timeRunning = 0;
                     isolateSpecie(graphe);
+                    afficher(graphe, timeRunning);
+                    break;
             }
 
             action = '0';
-            emptyScanf();
         }
         end = clock();
 
-        if (timeRunning == 1 && end - begin > CLOCKS_PER_SEC) {
+        if (timeRunning == 1 && (float) (end - begin) > CLOCKS_PER_SEC / playSpeed) {
             simulation(graphe);
             afficher(graphe, timeRunning);
             begin = clock();
         }
     }
+}
 
-
+int main() {
+    base();
     return 0;
 }

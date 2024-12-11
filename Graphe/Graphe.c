@@ -178,7 +178,8 @@ Graphe *lire_graphe(char *nomFichier) {
 void afficher(Graphe *graphe, bool timeRunning) {
     // system(CLEAR);
 
-    printf("+--[Networks]-[ J: ↘ | K: %s | L: ↗ ]-[S: Export image]---+\n", timeRunning ? "⏸" : "▶") - 1;
+    printf("+--[Networks]-[J: %c | K: %c | L: %c]-[Q: Quitter | S: Export image | G: Isoler espece ]---+\n", (char) 191, timeRunning ? (char) 215 : (char) 16, (char) 217) - 1;
+
     int la = 0;
 
     for (int i = 0; i < graphe->ordre; i++) {
@@ -209,7 +210,6 @@ void afficher(Graphe *graphe, bool timeRunning) {
         }
     }
 }
-
 
 void generate_dynamic_dot_file(Graphe *graphe, const char *output_file) {
     FILE *output = fopen(output_file, "w");
@@ -243,6 +243,5 @@ void generate_dynamic_dot_file(Graphe *graphe, const char *output_file) {
 
     fprintf(output, "}\n");
     fclose(output);
-    printf("Fichier DOT genere : %s\n", output_file);
 }
 

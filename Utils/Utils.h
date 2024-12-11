@@ -12,7 +12,7 @@
 #define CLEAR "clear"
 #endif
 
-#define LARGEURPRINT 64
+#define LARGEURPRINT 95
 
 int u_fscanf(FILE *__stream, const char *__format, ...);
 
