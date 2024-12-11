@@ -11,13 +11,15 @@
 #else
 #define CLEAR "clear"
 #endif
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
+
+#define LARGEURPRINT 64
+
 int u_fscanf(FILE *__stream, const char *__format, ...);
-#define MAX_CATEGORIES 25
-#define MAX_FIELD_LENGTH 500
 
 void emptyScanf();
+
+void fillIn(int toPrint, char in, char ex);
+
+void printSquaredReturn(char ex, char in);
+
 #endif //TROPHICNETWORKS_UTILS_H

@@ -1,5 +1,6 @@
 #include "Utils.h"
 
+// Function that retrieves a character only if the line is not empty
 int u_fscanf(FILE *__stream, const char *__format, ...) {
     if (fgetc(__stream) == '#') {
         fseek(__stream, -1L, SEEK_CUR);
@@ -24,4 +25,18 @@ int u_fscanf(FILE *__stream, const char *__format, ...) {
 void emptyScanf() {
     int c;
     while((c = getchar()) != EOF && c != '\n');
+}
+
+void fillIn(int toPrint, char in, char ex) {
+    for (int i = 0; i < toPrint - 1; i++) {
+        printf("%c", in);
+    }
+
+    printf("%c\n", ex);
+}
+
+void printSquaredReturn(char ex, char in) {
+    int la = printf("%c", ex);
+
+    fillIn(LARGEURPRINT - la, in, ex);
 }

@@ -88,9 +88,9 @@ void trophicLevels(Graphe* graphe, int id) {
 
     // Si un id spécifique est donné
     if (id >= 0 && id < graphe->ordre) {
-        printf("Calcul des niveaux trophiques pour l'espèce %d :\n", id);
+        // printf("Calcul des niveaux trophiques pour l'espèce %d :\n", id);
         calculerNiveauTrophique(graphe, id, niveaux, tailles);
-        printf("Espèce %d : Niveaux trophiques possibles : ", id);
+        // printf("Espèce %d : Niveaux trophiques possibles : ", id);
         for (int i = 0; i < tailles[id]; i++) {
             printf("%d ", niveaux[id][i]);
         }
@@ -112,11 +112,9 @@ void trophicLevels(Graphe* graphe, int id) {
     for (int i = 0; i < graphe->ordre; i++) {
         free(niveaux[i]);
     }
+
     free(niveaux);
-    free(tailles);
 }
-
-
 
 // Supprime une espèce et ses arcs associés
 void supprimerEspece(Graphe* graphe, int id) {
@@ -163,9 +161,6 @@ void supprimerEspece(Graphe* graphe, int id) {
     printf("Espèce %d supprimée.\n", id);
 }
 
-
-
-
 void repercuterSuppression(Graphe* graphe, int id) {
     // Vérification de l'id
     if (id < 0 || id >= graphe->ordre || graphe->pSommet[id]->quantity == -1) {
@@ -203,19 +198,36 @@ void repercuterSuppression(Graphe* graphe, int id) {
     }
 }
 
+void isolateSpecie(Graphe *graphe) {
+    int choix = -1, la = 0;
 
+    printf("Selectionne l'espece a isoler\n");
+    for (int i = 0; i < graphe->ordre; i++) {
+        printf(" (%d) %s\n", i + 1, graphe->names[i]);
+    }
 
+    do {
+        scanf("%d", &choix);
+    } while(choix <= 0 && choix > graphe->ordre && choix == -1);
 
+    la = printf("+--[%s]-[Quantity: %.02f]", graphe->names[choix - 1], graphe->pSommet[choix - 1]->quantity);
 
+    fillIn(LARGEURPRINT - la, '-', '+');
 
+    if (primaryProductor(graphe, choix - 1)) {
+        la = printf("| L'espece est un producteur primaire");
 
+        fillIn(LARGEURPRINT - la, ' ', '|');
+    }
 
+    la = printf("| Niveaux trophique: ");
 
+    int* tailles = calloc(graphe->ordre, sizeof(int));
+    trophicLevels(graphe, tailles, choix - 1);
 
+    fillIn(LARGEURPRINT - la - tailles[choix - 1], ' ', '|');
 
+    free(tailles);
 
-
-
-
-
-
+    printSquaredReturn('+', '-');
+}

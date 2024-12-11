@@ -178,12 +178,12 @@ Graphe *lire_graphe(char *nomFichier) {
 void afficher(Graphe *graphe, bool timeRunning) {
     // system(CLEAR);
 
-    int largeur = printf("+--[Networks]-[ J: ↘ | K: %s | L: ↗ ]-[S: Export image]--+\n", timeRunning ? "⏸" : "▶") - 1;
+    printf("+--[Networks]-[ J: ↘ | K: %s | L: ↗ ]-[S: Export image]---+\n", timeRunning ? "⏸" : "▶") - 1;
     int la = 0;
 
     for (int i = 0; i < graphe->ordre; i++) {
         la = printf("| %s (%d): ", graphe->names[i], (int) graphe->pSommet[i]->quantity);
-        for (int j = 0; j < largeur - la - 1; j++) {
+        for (int j = 0; j < LARGEURPRINT - la - 1; j++) {
             printf(" ");
         }
         printf("|\n");
@@ -193,7 +193,7 @@ void afficher(Graphe *graphe, bool timeRunning) {
         while(arc != NULL) {
             la = printf("|  - %s (%.3f)", graphe->names[arc->sommet], arc->poids);
 
-            for (int j = 0; j < largeur - la - 1; j++) {
+            for (int j = 0; j < LARGEURPRINT - la - 1; j++) {
                 printf(" ");
             }
             printf("|\n");
@@ -202,17 +202,10 @@ void afficher(Graphe *graphe, bool timeRunning) {
         }
 
         if (i != graphe->ordre - 1) {
-            la = printf("|");
-            for (int j = 0; j < largeur - la - 1; j++) {
-                printf(" ");
-            }
-            printf("|\n");
+            printSquaredReturn('|', ' ');
         } else {
-            la = printf("+");
-            for (int j = 0; j < largeur - la - 1; j++) {
-                printf("-");
-            }
-            printf("+\n\n");
+            printSquaredReturn('+', '-');
+            printf("\n");
         }
     }
 }
@@ -220,11 +213,11 @@ void afficher(Graphe *graphe, bool timeRunning) {
 
 void generate_dynamic_dot_file(Graphe *graphe, const char *output_file) {
     FILE *output = fopen(output_file, "w");
+
     if (!output) {
         perror("Erreur lors de l'ouverture du fichier DOT");
         return;
     }
-
 
     // Écriture de l'en-tête du graphe
     fprintf(output, "digraph Graphe {\n");
